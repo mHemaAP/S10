@@ -133,7 +133,7 @@ class custResNet(nn.Module):
         x = self.flatten_layer(x)        
         x = self.fc(x)
 
-        return F.log_softmax(x, dim=1)
+        return x #F.log_softmax(x, dim=1)
 
     
     # Network Summary
