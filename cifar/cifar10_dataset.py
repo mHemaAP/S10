@@ -35,12 +35,11 @@ class cifar10Set(dataSet):
                 A.ColorJitter(brightness=0, contrast=0.1, 
                               saturation=0.2, hue=0.1, p=0.5),
                 A.ToGray(p=0.2),
-                #A.HorizontalFlip(p=0.5),
                 A.PadIfNeeded(40, 40, p=1),
                 A.RandomCrop(32, 32, p=1),
 
                 # IAAFliplr is deprecated, hence using Horizontal Flip instead                                
-                #A.imgaug.transforms.IAAFliplr(1.0),  #(always_apply=False, p=0.5),
+               
                 A.HorizontalFlip(p=0.5),
                 # A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, 
                 #                    rotate_limit=15),

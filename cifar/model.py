@@ -1,7 +1,6 @@
 import torch.nn as nn
 import torchinfo
 import torch.nn.functional as F
-#from torchsummary import summary
 
 
 class convLayer(nn.Module):
@@ -50,7 +49,6 @@ class convLayer(nn.Module):
         return x
 
 
-
 class custBlock(nn.Module):
     def __init__(self, l_input_c, 
                  l_output_c, bias=False, 
@@ -91,65 +89,6 @@ class custBlock(nn.Module):
             x = x +  tmp_x   
 
         return x
-
-# class convLayer(nn.Module):
-#     def __init__(self, l_input_c, 
-#                  l_output_c, bias=False, 
-#                  padding=1, stride=1, 
-#                  max_pooling=False, 
-#                  dropout=0):
-#         super (convLayer, self).__init__()
-
-#         sub_layers = []
-
-#         sub_layers.append(nn.Conv2d(in_channels=l_input_c, 
-#                           out_channels=l_output_c, 
-#                           kernel_size=(3, 3), 
-#                           stride=stride,
-#                           padding= padding,
-#                           padding_mode='replicate',
-#                           bias=bias))
-        
-        
-#         if(max_pooling == True):
-#             sub_layers.append(nn.MaxPool2d(2, 2))
-
-#         sub_layers.append(nn.BatchNorm2d(l_output_c))
-
-#         sub_layers.append(nn.ReLU())
-
-#         if(dropout > 0):
-#             sub_layers.append(nn.Dropout(dropout))
-
-#         self.layer = nn.Sequential(*sub_layers)
-    
-#     def forward(self, x):
-
-#         return self.layer(x)
-
-# class custBlock(nn.Module):
-#     def __init__(self, input_c, output_c, pool=True, residue=2, dropout=0):
-#         super(custBlock, self).__init__()
-
-#         self.pool_block = convLayer(input_c, output_c, max_pooling=pool, dropout=dropout)
-#         self.res_block = None
-#         if residue > 0:
-#             layers = list()
-#             for i in range(0, residue):
-#                 layers.append(
-#                     convLayer(output_c, output_c, max_pooling=False, dropout=dropout)
-#                 )
-#             self.res_block = nn.Sequential(*layers)
-
-#     def forward(self, x):
-#         x = self.pool_block(x)
-#         if self.res_block is not None:
-#             x_ = x
-#             x = self.res_block(x)
-#             # += operator causes inplace errors in pytorch if done right after relu.
-#             x = x + x_
-#         return x
-
 
 
 class custResNet(nn.Module):
@@ -196,49 +135,6 @@ class custResNet(nn.Module):
 
         return F.log_softmax(x, dim=1)
 
-# class custResNet(nn.Module):
-#     def __init__(self, dropout=0):
-#         super(custResNet, self).__init__()
-
-
-#         self.prep_block = custBlock(input_c=3, output_c=64, 
-#                                          pool=False, dropout= dropout,
-#                                          residue=0
-#                                          ) # output_size = , rf_out = 
-        
-
-#         self.block1 = custBlock(input_c=64, output_c=128, 
-#                                          pool=True, dropout= dropout,
-#                                          residue=2
-#                                          ) # output_size = , rf_out = 
-        
-#         self.block2 = custBlock(input_c=128, output_c=256, 
-#                                          pool=True, dropout= dropout,
-#                                          residue=0
-#                                          ) # output_size = , rf_out =
-        
-#         self.block3 = custBlock(input_c=256, output_c=512, 
-#                                          pool=True, dropout= dropout,
-#                                          residue=2
-#                                          ) # output_size = , rf_out = 
-
-#         self.max_pool_layer = nn.MaxPool2d(4, 4)
-#         self.flatten_layer = nn.Flatten()
-#         self.fc = nn.Linear(512, 10)
-#         #self.softmax = nn.Softmax()       
-
-
-#     def forward(self, x):
-
-#         x = self.prep_block(x)
-#         x = self.block1(x)        
-#         x = self.block2(x)
-#         x = self.block3(x)
-#         x = self.max_pool_layer(x)
-#         x = self.flatten_layer(x)        
-#         x = self.fc(x)
-
-#         return F.log_softmax(x, dim=1)
     
     # Network Summary
     def summary(self, input_size=None, depth=10):

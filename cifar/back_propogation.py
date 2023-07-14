@@ -1,8 +1,6 @@
 import torch
 import torch.nn.functional as F
 
-from tqdm import tqdm
-
 train_losses = []
 test_losses = []
 train_acc = []
@@ -14,18 +12,12 @@ epoch_test_loss = 0
 def train(model, device, train_loader, optimizer, loss_criterion, use_l1=False, lambda_l1=5e-4, scheduler=None):
 
   model.train()
-  #pbar = tqdm(train_loader)
 
   correct = 0
   processed = 0
 
-#   if(loss_criterion == 'NLL'):  
-#     loss_function = F.nll_loss()
-#   elif(loss_criterion == 'CE'):
-#     loss_function = torch.nn.CrossEntropyLoss()
 
-
-  for data, target in train_loader: #enumerate(pbar):
+  for data, target in train_loader: 
     # get samples
     data, target = data.to(device), target.to(device)
 
@@ -40,8 +32,6 @@ def train(model, device, train_loader, optimizer, loss_criterion, use_l1=False, 
     y_pred = model(data)
 
     # Calculate loss
-    #loss = F.nll_loss(y_pred, target)
-
     loss = loss_criterion(y_pred, target)
     train_losses.append(loss)
 
@@ -60,13 +50,10 @@ def train(model, device, train_loader, optimizer, loss_criterion, use_l1=False, 
     if scheduler:
         scheduler.step()    
 
-    # Update pbar-tqdm
-
     pred = y_pred.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
     correct += pred.eq(target.view_as(pred)).sum().item()
     processed += len(data)
 
-    #pbar.set_description(desc= f'Loss={loss.item()} Batch_id={batch_idx} Accuracy={100*correct/processed:0.2f}')
     train_acc.append(100*correct/processed)
 
   return train_losses, train_acc
@@ -88,26 +75,18 @@ def test(model, device, test_loader, loss_criterion):
     test_loss = 0
     correct = 0
 
-    # if(loss_criterion == 'NLL'):  
-    #     loss_function = F.nll_loss()
-    # elif(loss_criterion == 'CE'):
-    #     loss_function = torch.nn.CrossEntropyLoss()    
 
     with torch.no_grad():
         for data, target in test_loader:
             data, target = data.to(device), target.to(device)
             output = model(data)
-            #test_loss += F.nll_loss(output, target, reduction='sum').item()  # sum up batch loss
+
             test_loss += loss_criterion(output, target).item()  # sum up batch loss            
             pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
             correct += pred.eq(target.view_as(pred)).sum().item()
 
     test_loss /= len(test_loader.dataset)
     test_losses.append(test_loss)
-
-    # print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.2f}%)\n'.format(
-    #     test_loss, correct, len(test_loader.dataset),
-    #     100. * correct / len(test_loader.dataset)))
 
     test_acc.append(100. * correct / len(test_loader.dataset))
     set_epoch_test_loss(test_loss)

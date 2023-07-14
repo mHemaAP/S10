@@ -15,6 +15,6 @@ def get_one_cycle_LR_scheduler(optimizer, train_loader, best_lr, epochs):
     return scheduler
 
 def get_adam_optimizer(model):
-    #optimizer = optim.Adam(model.parameters(), lr=1e-7, weight_decay=1e-2)
+
     optimizer = optim.Adam(model.parameters(), lr=1e-9, weight_decay=1e-2)
     return optimizer

@@ -25,11 +25,11 @@ class trainModel():
             self.optimizer = get_adam_optimizer(model)
         else:
             self.optimizer = get_sgd_optimizer(model)
-        # self.loss_criterion = 'CE'
+
         if(loss_criterion == 'NLL'):  
             self.loss_function = torch.nn.functional.nll_loss()
         elif(loss_criterion == 'CE'):
-            self.loss_function = torch.nn.CrossEntropyLoss() #reduction='sum')        
+            self.loss_function = torch.nn.CrossEntropyLoss()        
 
         self.train = train
         self.test = test
@@ -51,7 +51,7 @@ class trainModel():
         self.train_accuracy = []
         self.test_accuracy = []
 
-        self.schedule = []
+        self.lr_schedule = []
 
         self.start_time = 0
         self.end_time = 0
@@ -79,14 +79,13 @@ class trainModel():
                             test_loss, test_accuracy):
 
         epoch_mins, epoch_secs = self.epoch_time_period()
-        learn_rate = self.schedule[epoch]
+        learn_rate = self.lr_schedule[epoch]
         print(f'| {epoch+1:5} | {learn_rate:.6f} | {epoch_mins:02}m {epoch_secs:02}s | {train_loss[-1:][0]:.6f}  | {round(train_accuracy[-1:][0], 2):6}%  | {test_loss[-1:][0]:.6f} |{round(test_accuracy[-1:][0], 2):7}% |')
-        #print(f'| {epoch+1:5} | {learn_rate:.6f} | {epoch_mins:02}m {epoch_secs:02}s | {train_loss[-1:][0]:.6f} | {str(train_accuracy[-1:][0]):7}% | {test_loss[-1:][0]:.6f} | {str(test_accuracy[-1:][0]):5}% |')
+        
 
 
     def save_best_model(self, test_accuracy_percent):
 
-        # = (100.0 * test_accuracy / len(self.test_loader.dataset))
 
         if test_accuracy_percent >= self.best_perc:
             self.best_perc = test_accuracy_percent
@@ -99,7 +98,7 @@ class trainModel():
             f'| Epoch | {"LR":8} | {"Time":7} | {"TrainLoss":7} | {"TrainAcc":7} | {"TestLoss":7} | {"TestAcc":7} |')
 
         for epoch in range(self.epochs):
-            self.schedule.append(self.optimizer.param_groups[0]['lr'])
+            #self.lr_schedule.append(self.optimizer.param_groups[0]['lr'])
 
             self.start_time = time.time()
 
@@ -118,6 +117,8 @@ class trainModel():
             
             self.end_time = time.time()
             self.save_best_model(test_accuracy[-1:][0])
+
+            self.lr_schedule.append(self.scheduler.get_last_lr()[0])            
 
             self.show_epoch_progress(epoch, train_accuracy, train_loss, 
                                       test_loss, test_accuracy)
@@ -142,7 +143,6 @@ class trainModel():
     def display_model_stats(self):
         fig, axs = plt.subplots(2,2,figsize=(15,10))
         train_loss = [t.cpu().item() for t in self.train_loss]
-        #tr_loss = move_to_cpu(self.train_loss)
         axs[0, 0].plot(train_loss)
         axs[0, 0].set_title("Training Loss")
         axs[1, 0].plot(self.train_accuracy)

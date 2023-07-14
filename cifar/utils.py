@@ -61,16 +61,22 @@ def display_train_data(train_data):
   print(' - std:', torch.std(train_data))
   print(' - var:', torch.var(train_data))
 
-    
-# ### Display the model statistics         
-# def display_model_stats(train_loss, train_accuracy, test_loss, test_accuracy):
-#   fig, axs = plt.subplots(2,2,figsize=(15,10))
-#   axs[0, 0].plot(train_loss)
-#   axs[0, 0].set_title("Training Loss")
-#   axs[1, 0].plot(train_accuracy)
-#   axs[1, 0].set_title("Training Accuracy")
-#   axs[0, 1].plot(test_loss)
-#   axs[0, 1].set_title("Test Loss")
-#   axs[1, 1].plot(test_accuracy)
-#   axs[1, 1].set_title("Test Accuracy")
 
+"""
+args: 
+points should be of type list of tuples or lists
+Ex : [{[x: xpoints, y: ypoints, label: title, xlabel: "" , ylabel: " "}),([....points],label)]
+"""
+def plot_learning_rate_trend(curves,title,Figsize = (7,7)):
+    fig = plt.figure(figsize=Figsize)
+    ax = plt.subplot()
+    for curve in curves:
+        if("x" not in curve):
+            ax.plot(curve["y"], label=curve.get("label", "label"))   
+        else:
+            ax.plot(curve["x"],curve["y"], label=curve.get("label","label"))
+        plt.xlabel(curve.get("xlabel","x-axis"))
+        plt.ylabel(curve.get("ylabel","y-axis"))
+        plt.title(title)
+    ax.legend()
+    plt.show()
