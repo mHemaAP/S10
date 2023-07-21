@@ -197,7 +197,7 @@ The following image collection shows the mis-classified predictions for the norm
 
 ![Misclassified Prediction](Images/misclassified_predicted_images.png)
 
-##### 8.5 Images of RF Calculations and Formulae Used
+#### 8.5 Images of RF Calculations and Formulae Used
 
 Excel sheet carrying the RF calculations can be found at "RF_Calculation_Coded_with_Formulae.xlsx" and image of these calculations is as follows,
 
