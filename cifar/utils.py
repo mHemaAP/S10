@@ -62,11 +62,8 @@ def display_train_data(train_data):
   print(' - var:', torch.var(train_data))
 
 
-"""
-args: 
-points should be of type list of tuples or lists
-Ex : [{[x: xpoints, y: ypoints, label: title, xlabel: "" , ylabel: " "}),([....points],label)]
-"""
+
+##### args: points should be of type list of tuples or lists
 def plot_learning_rate_trend(curves,title,Figsize = (7,7)):
     fig = plt.figure(figsize=Figsize)
     ax = plt.subplot()

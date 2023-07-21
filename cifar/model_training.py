@@ -62,7 +62,7 @@ class trainModel():
     def get_best_lr(self):
         find_lr = LRFinder(self.model, self.optimizer, 
                            self.loss_function, device=self.device)
-        find_lr.range_test(self.train_loader, end_lr=0.4, 
+        find_lr.range_test(self.train_loader, end_lr=0.1, 
                              num_iter=100, step_mode='exp')
         ax, best_lr = find_lr.plot()  # to inspect the loss-learning rate graph
         find_lr.reset()  # to reset the model and optimizer to their initial state

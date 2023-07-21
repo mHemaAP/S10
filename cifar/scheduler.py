@@ -5,6 +5,9 @@ def get_sgd_optimizer(model):
     optimizer = optim.SGD(model.parameters(), lr=0.05, momentum=0.9)
     return optimizer
 
+# The one cycle LR scheduler is set to have the maximum learning rate 
+# at the 5th epoch while training the model. The scheduler is set to not 
+# have the third phase so that there is no Annihilation
 def get_one_cycle_LR_scheduler(optimizer, train_loader, best_lr, epochs):
     scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=best_lr, 
                                                     steps_per_epoch=len(train_loader),
